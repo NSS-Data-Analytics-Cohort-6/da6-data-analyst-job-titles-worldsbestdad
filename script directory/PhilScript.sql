@@ -91,3 +91,22 @@ from data_analyst_jobs
 where title not ilike '%analyst%'
 and title not ilike '%analytics%';
 --They all want you to use Tableau, interesting
+
+/* BONUS. You want to understand which jobs requiring SQL are hard to fill. 
+Find the number of jobs by industry (domain) that require SQL and have been 
+posted longer than 3 weeks.
+	-Disregard any postings where the domain is NULL.
+	-Order your results so that the domain with the greatest 
+	 number of hard to fill jobs is at the top.
+	-Which three industries are in the top 4 on this list? 
+	 How many jobs have been listed for more than 3 weeks for each of the top 4? */
+select domain,
+count(title) as job_postings
+from data_analyst_jobs
+where skill ilike '%sql%'
+and days_since_posting > 3*7
+and domain is not null
+group by domain
+order by count(title) desc;
+-- Top 4 industries are internet and software, banks and financial services, consulting and buisness services, and health care
+-- Top 4 jobs posting numbers are 62, 61, 57, and 52.
