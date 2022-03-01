@@ -13,3 +13,81 @@ limit 10;
 -- ExxonMobil is the 10th row company!
 
 --Q3. How many postings are in Tennessee? How many are there in either Tennessee or Kentucky?
+select count(*)
+from data_analyst_jobs
+where location = 'TN';
+-- 21 TN Jobs!
+
+-- Q4. How many postings in Tennessee have a star rating above 4?
+select count(*)
+from data_analyst_jobs
+where location = 'TN'
+and star_rating > 4;
+-- 3 TN Jobs that don't stink!
+
+--Q5. How many postings in the dataset have a review count between 500 and 1000?
+select count(*)
+from data_analyst_jobs
+where review_count between 500 and 1000;
+-- 151 Moderately reviewed postings!
+
+/*Q6. Show the average star rating for companies in each state. 
+The output should show the state as state and the average rating for the state as avg_rating. 
+Which state shows the highest average rating? */
+select location,
+avg(star_rating) as avg_rating
+from data_analyst_jobs
+where star_rating is not null
+group by location
+order by avg_rating desc;
+--Highest avg rating is Nebraska(???) with a 4.19 rating
+
+--Q7. Select unique job titles from the data_analyst_jobs table. How many are there?
+select count(distinct title)
+from data_analyst_jobs;
+--881 Unique jobs titles
+
+--Q8. How many unique job titles are there for California companies?
+select count(distinct title)
+from data_analyst_jobs
+where location='CA';
+--230 in Cali alone, that's 1/4th of the unique names!
+
+/* Q9. Find the name of each company and its average star rating for all 
+companies that have more than 5000 reviews across all locations.
+How many companies are there with more that 5000 reviews across all locations? */
+select company,
+avg(star_rating) as avg_rating,
+sum(review_count) as total_reviews
+from data_analyst_jobs
+where company is not null
+group by company
+having sum(review_count)>5000;
+--Looks like we have 70 companies with 5000+ reviews across all locations.
+
+/* Q10. Add the code to order the query in #9 from highest to 
+lowest average star rating. Which company with more than 5000 reviews 
+across all locations in the dataset has the highest star rating? What is that rating? */
+select company,
+avg(star_rating) as avg_rating,
+sum(review_count) as total_reviews
+from data_analyst_jobs
+where company is not null
+group by company
+having sum(review_count)>5000
+order by total_reviews desc;
+--Walmart has the most total reviews, not a big surprise
+
+--Q11. Find all the job titles that contain the word ‘Analyst’. How many different job titles are there?
+select count(distinct title)
+from data_analyst_jobs
+where title ilike '%analyst%';
+--Total of 774 unique job titles that have the word analyst in there!
+
+/* Q12. How many different job titles do not contain either the word ‘Analyst’ 
+or the word ‘Analytics’? What word do these positions have in common? */
+select distinct title
+from data_analyst_jobs
+where title not ilike '%analyst%'
+and title not ilike '%analytics%';
+--They all want you to use Tableau, interesting
